@@ -57,7 +57,7 @@ end
 
 # The url for launching the tool
 # It will verify the OAuth signature
-post '/lti_tool' do
+post '/' do
   return erb :error unless authorize!
 
   if @tp.outcome_service?
