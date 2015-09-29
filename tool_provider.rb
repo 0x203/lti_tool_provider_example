@@ -18,22 +18,24 @@ def show_error(message)
 end
 
 def authorize!
-  if key = params['oauth_consumer_key']
-    if secret = oauth_creds[key]
-      @tp = IMS::LTI::ToolProvider.new(key, secret, params)
-    else
-      @tp = IMS::LTI::ToolProvider.new(nil, nil, params)
-      @tp.lti_msg = "Your consumer didn't use a recognized key."
-      @tp.lti_errorlog = 'You did it wrong!'
-      show_error "Consumer key wasn't recognized"
-      return false
-    end
-  else
+  key = params['oauth_consumer_key']
+  unless key
     show_error 'No consumer key'
     return false
   end
 
-  unless @tp.valid_request?(request)
+  secret = oauth_creds[key]
+  unless secret
+    @tp = IMS::LTI::ToolProvider.new(nil, nil, params)
+    @tp.lti_msg = "Your consumer didn't use a recognized key."
+    @tp.lti_errorlog = 'You did it wrong!'
+    show_error "Consumer key wasn't recognized"
+    return false
+  end
+
+  @tp = IMS::LTI::ToolProvider.new(key, secret, params)
+
+  unless @tp.valid_request? request
     show_error 'The OAuth signature was invalid'
     return false
   end
