@@ -1,2 +1,2 @@
 FROM ruby:2.2-onbuild
-CMD ['./config.ru']
+CMD '/usr/local/bin/ruby' '/usr/src/app/config.ru'
