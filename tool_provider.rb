@@ -11,7 +11,7 @@ get '/' do
 end
 
 # the consumer keys/secrets
-oauth_creds = { 'test' => 'secret', 'testing' => 'supersecret' }
+oauth_creds = { ENV['consumer_key'] => ENV['shared_secret'] }
 
 def show_error(message)
   @message = message
