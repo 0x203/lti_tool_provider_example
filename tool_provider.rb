@@ -11,7 +11,7 @@ get '/' do
 end
 
 # the consumer keys/secrets
-oauth_creds = { ENV['consumer_key'] => ENV['shared_secret'] }
+$oauth_creds = { ENV['consumer_key'] => ENV['shared_secret'] }
 
 def show_error(message)
   @message = message
@@ -24,7 +24,7 @@ def authorize!
     return false
   end
 
-  secret = oauth_creds[key]
+  secret = $oauth_creds[key]
   unless secret
     @tp = IMS::LTI::ToolProvider.new(nil, nil, params)
     @tp.lti_msg = "Your consumer didn't use a recognized key."
@@ -129,7 +129,7 @@ post '/assessment' do
     return erb :error
   end
 
-  @tp = IMS::LTI::ToolProvider.new(key, oauth_creds[key], launch_params)
+  @tp = IMS::LTI::ToolProvider.new(key, $oauth_creds[key], launch_params)
 
   unless @tp.outcome_service?
     show_error "This tool wasn't lunched as an outcome service"
